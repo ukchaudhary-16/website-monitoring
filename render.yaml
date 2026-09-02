@@ -1,0 +1,39 @@
+# Render Blueprint — backend API + workers.
+# Frontend goes to Vercel (see DEPLOY.md); contracts go to Polygon Amoy.
+services:
+  - type: web
+    name: depin-monitor-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false          # set in dashboard (MongoDB Atlas SRV string)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false          # your Vercel URL, e.g. https://depin-monitor.vercel.app
+      - key: APP_BASE_URL
+        sync: false
+      - key: CONSENSUS_MIN_SUBMISSIONS
+        value: 3
+      - key: ALERT_CONFIRM_THRESHOLD
+        value: 2
+      # --- optional: on-chain settlement ---
+      - key: CHAIN_RPC_URL
+        sync: false
+      - key: MONITOR_REGISTRY_ADDRESS
+        sync: false
+      - key: MONITOR_TOKEN_ADDRESS
+        sync: false
+      - key: SETTLEMENT_PRIVATE_KEY
+        sync: false
+      # --- optional: email alerts ---
+      - key: RESEND_API_KEY
+        sync: false

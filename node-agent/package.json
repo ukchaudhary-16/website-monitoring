@@ -1,0 +1,19 @@
+{
+  "name": "depin-monitor-node",
+  "version": "1.0.0",
+  "description": "Validator node agent for the DePIN uptime monitoring network",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "bin": { "depin-node": "src/index.js" },
+  "scripts": {
+    "start": "node src/index.js start",
+    "register": "node src/index.js register",
+    "dashboard": "node src/index.js dashboard"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.0",
+    "puppeteer": "^23.0.0"
+  }
+}
