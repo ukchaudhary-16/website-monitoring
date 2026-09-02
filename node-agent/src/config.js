@@ -12,6 +12,7 @@ module.exports = {
   submitOnchain: String(process.env.SUBMIT_ONCHAIN || "false") === "true",
   pollIntervalMs: Number(process.env.POLL_INTERVAL_SECONDS || 15) * 1000,
   headless: String(process.env.HEADLESS || "true") === "true",
+  puppeteerExecutablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "",
   renderTimeoutMs: Number(process.env.RENDER_TIMEOUT_MS || 20000),
   dashboardPort: Number(process.env.DASHBOARD_PORT || 5055),
 };

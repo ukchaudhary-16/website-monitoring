@@ -8,6 +8,9 @@ async function getBrowser() {
   _browser = await puppeteer.launch({
     headless: cfg.headless ? "new" : false,
     args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+    // Falls back to an already-installed Chrome/Edge when Puppeteer's own
+    // download failed. Point PUPPETEER_EXECUTABLE_PATH at chrome.exe / msedge.exe.
+    ...(cfg.puppeteerExecutablePath ? { executablePath: cfg.puppeteerExecutablePath } : {}),
   });
   return _browser;
 }
