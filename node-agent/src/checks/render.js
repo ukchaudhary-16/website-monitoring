@@ -27,7 +27,22 @@ async function closeBrowser() {
 // then check for the expected selector / non-trivial text. A navigation timeout
 // after we already have a response is treated as "slow but rendered", not down.
 async function renderCheck(url, expectedSelector, timeoutMs = cfg.renderTimeoutMs) {
-  const browser = await getBrowser();
+  let browser;
+  try {
+    browser = await getBrowser();
+  } catch (e) {
+    // Browser missing/broken is an operator-environment problem, not the site's
+    // fault — report "unknown" (null) so the verdict falls back to the HTTP check.
+    const hint = /Could not find Chrome/i.test(e.message)
+      ? " — run: npx puppeteer browsers install chrome"
+      : "";
+    return {
+      renderOk: null,
+      httpStatus: null,
+      responseTimeMs: null,
+      detail: `render unavailable: ${e.message.split("\n")[0]}${hint}`,
+    };
+  }
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 800 });
   await page.setUserAgent(
