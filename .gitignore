@@ -16,3 +16,7 @@ dist/
 build/
 .DS_Store
 npm-debug.log*
+
+# local-only project notes (not for the public repo)
+CLAUDE.md
+PROGRESS.md
