@@ -81,13 +81,20 @@ async function settleReadyJobs() {
         site.currentStatus = majority;
         site.pendingStatus = null;
         site.pendingCount = 0;
+        site.lastAlertAt = new Date();
         await site.save();
-        if (site.alertsEnabled && !firstReading) {
-          site.lastAlertAt = new Date();
-          await site.save();
-          sendStatusAlert({ site, from: confirmed, to: majority, region: job.region }).catch((e) =>
-            console.error("[alerts]", e.message)
-          );
+
+        // Alert on any confirmed transition, and on a first reading that is DOWN
+        // (a site that's broken from the moment you add it is worth knowing about).
+        // A first reading that is UP is silent — that's just "monitoring started".
+        const shouldAlert = site.alertsEnabled && (!firstReading || majority === "down");
+        if (shouldAlert) {
+          sendStatusAlert({
+            site,
+            from: firstReading ? "unknown" : confirmed,
+            to: majority,
+            region: job.region,
+          }).catch((e) => console.error("[alerts]", e.message));
         }
       } else {
         await site.save();
