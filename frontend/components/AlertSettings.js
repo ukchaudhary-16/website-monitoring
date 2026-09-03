@@ -34,36 +34,43 @@ export default function AlertSettings() {
     }
   }
 
-  if (!s) return <p className="muted">Loading alert settings…</p>;
+  if (!s) return <div className="skeleton" style={{ height: 120 }} />;
+
+  const Channel = ({ on, onToggle, label, children }) => (
+    <div className="card" style={{ background: "var(--surface)", padding: 16 }}>
+      <label className="inline" style={{ margin: 0, fontWeight: 600 }}>
+        <input type="checkbox" checked={on} onChange={(e) => onToggle(e.target.checked)} />
+        {label}
+      </label>
+      <div style={{ marginTop: on ? 10 : 0, maxHeight: on ? 80 : 0, overflow: "hidden", transition: ".2s" }}>
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <div>
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          <input type="checkbox" checked={s.email.enabled}
-            onChange={(e) => setS({ ...s, email: { ...s.email, enabled: e.target.checked } })} /> Email
-        </label>
-        <input placeholder={s.fallbackEmail || "alert address"} value={s.email.address}
-          onChange={(e) => setS({ ...s, email: { ...s.email, address: e.target.value } })} />
+    <div className="stack" style={{ gap: 12 }}>
+      <div className="grid cols-3">
+        <Channel on={s.email.enabled} label="Email"
+          onToggle={(v) => setS({ ...s, email: { ...s.email, enabled: v } })}>
+          <input placeholder={s.fallbackEmail || "alert address"} value={s.email.address}
+            onChange={(e) => setS({ ...s, email: { ...s.email, address: e.target.value } })} />
+        </Channel>
+        <Channel on={s.slack.enabled} label="Slack"
+          onToggle={(v) => setS({ ...s, slack: { ...s.slack, enabled: v } })}>
+          <input className="mono" placeholder="hooks.slack.com/services/…" value={s.slack.webhookUrl}
+            onChange={(e) => setS({ ...s, slack: { ...s.slack, webhookUrl: e.target.value } })} />
+        </Channel>
+        <Channel on={s.webhook.enabled} label="Webhook"
+          onToggle={(v) => setS({ ...s, webhook: { ...s.webhook, enabled: v } })}>
+          <input className="mono" placeholder="https://your-endpoint/hook" value={s.webhook.url}
+            onChange={(e) => setS({ ...s, webhook: { ...s.webhook, url: e.target.value } })} />
+        </Channel>
       </div>
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          <input type="checkbox" checked={s.slack.enabled}
-            onChange={(e) => setS({ ...s, slack: { ...s.slack, enabled: e.target.checked } })} /> Slack webhook
-        </label>
-        <input placeholder="https://hooks.slack.com/services/…" value={s.slack.webhookUrl}
-          onChange={(e) => setS({ ...s, slack: { ...s.slack, webhookUrl: e.target.value } })} />
+      <div className="row">
+        <button className="sm" onClick={save}>Save alert settings</button>
+        {msg && <span className="tiny muted">{msg}</span>}
       </div>
-      <div style={{ marginBottom: 12 }}>
-        <label>
-          <input type="checkbox" checked={s.webhook.enabled}
-            onChange={(e) => setS({ ...s, webhook: { ...s.webhook, enabled: e.target.checked } })} /> Generic webhook (JSON POST)
-        </label>
-        <input placeholder="https://your-endpoint.example/hook" value={s.webhook.url}
-          onChange={(e) => setS({ ...s, webhook: { ...s.webhook, url: e.target.value } })} />
-      </div>
-      <button onClick={save}>Save alert settings</button>
-      {msg && <span className="muted" style={{ marginLeft: 10 }}>{msg}</span>}
     </div>
   );
 }

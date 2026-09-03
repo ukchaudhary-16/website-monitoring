@@ -21,23 +21,45 @@ export default function PlanCards({ current, onChange }) {
   }
 
   return (
-    <div className="grid cols-3" style={{ marginTop: 12 }}>
-      {plans.map((p) => (
-        <div key={p.id} className={`card plan ${current === p.id ? "active" : ""}`}>
-          <h3>{p.name}</h3>
-          <div className="price">${p.priceUsd}<span className="muted" style={{ fontSize: 13 }}>/mo</span></div>
-          <p className="muted" style={{ fontSize: 13 }}>
-            {p.maxSites} sites · {p.minIntervalSeconds}s min · {p.maxRegions} regions<br />
-            {p.alertChannels.join(", ")}
-          </p>
-          <button
-            disabled={current === p.id || busy === p.id}
-            onClick={() => select(p.id)}
+    <div className="grid cols-3" style={{ marginTop: 4 }}>
+      {plans.map((p) => {
+        const active = current === p.id;
+        return (
+          <div
+            key={p.id}
+            className="card"
+            style={{
+              textAlign: "center",
+              borderColor: active ? "var(--accent)" : undefined,
+              boxShadow: active ? "0 0 0 1px var(--accent), var(--shadow)" : undefined,
+            }}
           >
-            {current === p.id ? "Current plan" : busy === p.id ? "…" : "Select"}
-          </button>
-        </div>
-      ))}
+            {active && <div className="pill" style={{ marginBottom: 10 }}>Current plan</div>}
+            <h3 style={{ marginBottom: 2 }}>{p.name}</h3>
+            <div style={{ fontSize: "1.8rem", fontWeight: 700, letterSpacing: "-.02em" }}>
+              ${p.priceUsd}
+              <span className="faint" style={{ fontSize: 13, fontWeight: 500 }}> /mo</span>
+            </div>
+            <ul style={{
+              listStyle: "none", padding: 0, margin: "12px 0 16px",
+              fontSize: 13, color: "var(--muted)", textAlign: "left", display: "grid", gap: 6,
+            }}>
+              <li>✓ {p.maxSites} monitored site{p.maxSites > 1 ? "s" : ""}</li>
+              <li>✓ {p.minIntervalSeconds}s minimum interval</li>
+              <li>✓ up to {p.maxRegions} region{p.maxRegions > 1 ? "s" : ""}</li>
+              <li>✓ {p.alertChannels.join(", ")}</li>
+            </ul>
+            <button
+              className={active ? "secondary" : ""}
+              style={{ width: "100%" }}
+              disabled={active || busy === p.id}
+              onClick={() => select(p.id)}
+            >
+              {active ? "Selected" : busy === p.id ? "…" : "Choose " + p.name}
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }

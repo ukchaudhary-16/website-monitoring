@@ -29,20 +29,28 @@ export default function Register() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: 420 }}>
-      <h1>Create account</h1>
+    <div className="container narrow stack fade-in">
+      <div style={{ textAlign: "center" }}>
+        <h1 style={{ fontSize: "1.6rem" }}>Create your account</h1>
+        <p className="muted tiny">Starts on the free plan — 1 site, 1 region. Upgrade anytime.</p>
+      </div>
       <form onSubmit={submit} className="card">
         <label>Email</label>
-        <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+        <input type="email" autoComplete="email" value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         <label>Password</label>
-        <input type="password" minLength={6} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
-        <label>Wallet address (optional)</label>
-        <input value={form.walletAddress} onChange={(e) => setForm({ ...form, walletAddress: e.target.value })} placeholder="0x..." />
+        <input type="password" autoComplete="new-password" minLength={6} value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+        <label>Wallet address <span className="faint">(optional)</span></label>
+        <input value={form.walletAddress} className="mono"
+          onChange={(e) => setForm({ ...form, walletAddress: e.target.value })} placeholder="0x…" />
         {err && <p className="error">{err}</p>}
-        <button style={{ marginTop: 16 }} disabled={busy}>{busy ? "..." : "Sign up (free plan)"}</button>
+        <button style={{ marginTop: 18, width: "100%" }} disabled={busy}>
+          {busy ? "Creating…" : "Sign up — free plan"}
+        </button>
       </form>
-      <p className="muted" style={{ marginTop: 12 }}>
-        Have an account? <Link href="/login">Log in</Link>
+      <p className="muted tiny" style={{ textAlign: "center" }}>
+        Already have an account? <Link href="/login" style={{ color: "var(--accent)" }}>Log in</Link>
       </p>
     </div>
   );

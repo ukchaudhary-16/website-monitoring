@@ -27,18 +27,28 @@ export default function Login() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: 420 }}>
-      <h1>Log in</h1>
+    <div className="container narrow stack fade-in">
+      <div style={{ textAlign: "center" }}>
+        <h1 style={{ fontSize: "1.6rem" }}>Welcome back</h1>
+        <p className="muted tiny">Log in to your monitoring dashboard.</p>
+      </div>
       <form onSubmit={submit} className="card">
         <label>Email</label>
-        <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+        <input type="email" autoComplete="email" value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })} required />
         <label>Password</label>
-        <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+        <input type="password" autoComplete="current-password" value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })} required />
         {err && <p className="error">{err}</p>}
-        <button style={{ marginTop: 16 }} disabled={busy}>{busy ? "..." : "Log in"}</button>
+        <button style={{ marginTop: 18, width: "100%" }} disabled={busy}>
+          {busy ? "Signing in…" : "Log in"}
+        </button>
+        <p className="notice" style={{ marginTop: 14 }}>
+          Demo account: <code>demo@example.com</code> / <code>password123</code>
+        </p>
       </form>
-      <p className="muted" style={{ marginTop: 12 }}>
-        No account? <Link href="/register">Sign up</Link>
+      <p className="muted tiny" style={{ textAlign: "center" }}>
+        No account? <Link href="/register" style={{ color: "var(--accent)" }}>Sign up</Link>
       </p>
     </div>
   );

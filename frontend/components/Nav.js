@@ -1,44 +1,54 @@
 "use client";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { getToken, setToken } from "@/lib/api";
 
 export default function Nav() {
   const [authed, setAuthed] = useState(false);
+  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    setAuthed(!!getToken());
-    const h = () => setAuthed(!!getToken());
-    window.addEventListener("storage", h);
-    return () => window.removeEventListener("storage", h);
+    const sync = () => setAuthed(!!getToken());
+    sync();
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
   }, []);
 
   function logout() {
     setToken(null);
-    setAuthed(false);
+    window.dispatchEvent(new Event("storage"));
     router.push("/");
   }
 
+  const link = (href, label) => (
+    <Link href={href} className={pathname === href ? "active" : ""}>
+      {label}
+    </Link>
+  );
+
   return (
-    <div className="nav">
-      <Link href="/" className="brand">◉ DePIN Monitor</Link>
-      <div>
-        <Link href="/">Network</Link>
-        <Link href="/nodes">Run a node</Link>
+    <nav className="nav">
+      <Link href="/" className="brand">
+        <span className="mark" />
+        DePIN Monitor
+      </Link>
+      <div className="links">
+        {link("/", "Network")}
+        {link("/nodes", "Run a node")}
         {authed ? (
           <>
-            <Link href="/dashboard">Dashboard</Link>
-            <a onClick={logout} style={{ cursor: "pointer" }}>Log out</a>
+            {link("/dashboard", "Dashboard")}
+            <button className="ghost sm" onClick={logout}>Log out</button>
           </>
         ) : (
           <>
-            <Link href="/login">Log in</Link>
-            <Link href="/register">Sign up</Link>
+            {link("/login", "Log in")}
+            <Link href="/register" className="btn sm" style={{ marginLeft: 6 }}>Sign up</Link>
           </>
         )}
       </div>
-    </div>
+    </nav>
   );
 }
