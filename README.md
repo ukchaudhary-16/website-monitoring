@@ -4,9 +4,10 @@ Decentralized uptime monitoring: a global network of independent validator nodes
 load and render websites (not just ping them), reach consensus on up/down, and are
 rewarded or slashed on-chain for honesty. See [CLAUDE.md](CLAUDE.md) for the full spec.
 
+**▶ [DOCUMENTATION.md](DOCUMENTATION.md) — full project explanation (read this to brief the examiner).**
+**▶ [BLOCKCHAIN.md](BLOCKCHAIN.md) — how the chain layer works + deploy to Polygon Amoy.**
 **▶ [SETUP.md](SETUP.md) — every env var, API key, and run step in one checklist.**
-**▶ [PROGRESS.md](PROGRESS.md) — done vs remaining, task by task. Resume from here.**
-**▶ [DEMO.md](DEMO.md) — examiner walkthrough · [DEPLOY.md](DEPLOY.md) — cloud deploy steps.**
+**▶ [DEMO.md](DEMO.md) — examiner walkthrough · [DEPLOY.md](DEPLOY.md) — cloud deploy · PROGRESS.md — task tracker (local).**
 
 ## Build status
 
