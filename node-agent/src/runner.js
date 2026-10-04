@@ -71,6 +71,7 @@ async function tick(wallet) {
         status: result.status,
         responseTimeMs: result.responseTimeMs,
         renderOk: result.renderOk,
+        detail: result.detail,
         submitted: true,
         onChain,
       });
@@ -78,6 +79,9 @@ async function tick(wallet) {
         `[job ${String(job.id).slice(-6)}] ${job.url} -> ${result.status.toUpperCase()} ` +
           `(${result.responseTimeMs ?? "?"}ms, render=${result.renderOk})${onChain ? " [on-chain]" : ""}`
       );
+      if (result.status === "down" || result.renderOk !== true) {
+        console.log(`    reason: ${result.detail}`);
+      }
     } catch (e) {
       pushError(`job ${job.id}: ${e.message}`);
       console.warn(`[job ${String(job.id).slice(-6)}] failed: ${e.message}`);

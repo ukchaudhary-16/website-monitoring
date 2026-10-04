@@ -23,9 +23,12 @@ table{width:100%;border-collapse:collapse;margin-top:8px} td,th{padding:6px 8px;
 <div class="card"><div class="k">Last heartbeat</div><div class="v" style="font-size:13px">__HEARTBEAT__</div></div>
 </div>
 <h3>Recent checks</h3>
-<table><tr><th>Time</th><th>URL</th><th>Region</th><th>Status</th><th>ms</th><th>render</th><th>on-chain</th></tr>__ROWS__</table>
+<table><tr><th>Time</th><th>URL</th><th>Region</th><th>Status</th><th>ms</th><th>render</th><th>on-chain</th><th>detail</th></tr>__ROWS__</table>
 <h3>Errors</h3><div class="muted">__ERRORS__</div>
 </body></html>`;
+
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function render(nodeInfo) {
   const rows = state.recent
@@ -33,7 +36,8 @@ function render(nodeInfo) {
       (r) =>
         `<tr><td class=muted>${r.at.slice(11, 19)}</td><td>${r.url}</td><td>${r.region}</td>` +
         `<td class="${r.status}">${r.status.toUpperCase()}</td><td>${r.responseTimeMs ?? "-"}</td>` +
-        `<td>${r.renderOk}</td><td>${r.onChain ? "✓" : ""}</td></tr>`
+        `<td>${r.renderOk}</td><td>${r.onChain ? "✓" : ""}</td>` +
+        `<td class=muted style="font-size:12px">${esc(r.detail)}</td></tr>`
     )
     .join("");
   const errs = state.errors.map((e) => `${e.at.slice(11, 19)} — ${e.msg}`).join("<br>") || "none";
